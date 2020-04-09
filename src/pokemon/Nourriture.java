@@ -24,7 +24,7 @@ public class Nourriture extends Item implements Utilisable {
     public void utiliser(Joueur joueur, int indexPokemon) {
         if (null != joueur) {
             if (indexPokemon >= 0 && indexPokemon < joueur.getPokemons().length && !joueur.getPokemons()[indexPokemon].equals(null)) {
-                if (this.isCompatible(joueur.getPokemons()[indexPokemon]) && utilisationsRestantes > 0) {
+                if (this.isCompatible(joueur.getPokemons()[indexPokemon]) && utilisationsRestantes > 0){
                     joueur.getPokemons()[indexPokemon].baisserAppetit(apport);
                     this.baisserUtilisationsRestantes(1);
                 }
@@ -61,7 +61,7 @@ public class Nourriture extends Item implements Utilisable {
     @Override
     public String toString() {
         String compatibilite = "{";
-        for (String type : compatibilites) {
+        for (String type: compatibilites) {
             if (compatibilite == "{" && type != null) {
                 compatibilite += type;
             } else if (type != null) {

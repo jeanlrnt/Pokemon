@@ -1,15 +1,32 @@
 package pokemon;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.Scanner;
+import pokemon.Attaques.*;
 
 public class ChasseAuxPokemons {
 
     public static void main(String[] args) throws FileNotFoundException {
+
+        HashMap<String, Integer> mapPokemon = new HashMap<String, Integer>();
+
+        try {
+            FileReader lecteur = new FileReader("src/tp10/Data/pokedexComplet.txt");
+            Scanner s = new Scanner(lecteur);
+            while (!s.hasNext("END")) {
+                int numero = s.nextInt();
+                String nom = s.next();
+                mapPokemon.put(nom, numero);
+                if (s.hasNextLine()) s.nextLine();
+            }
+            lecteur.close();
+            System.out.println(mapPokemon.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         HashMap<String, Attaque> mappeAttaques = new HashMap<String, Attaque>();
         mappeAttaques.put("pistolet_a_eau", new AttaquePistoleEau());
@@ -24,7 +41,7 @@ public class ChasseAuxPokemons {
         ArrayList<Pokemon> pokemonsUtilises = new ArrayList<Pokemon>();
 
         try {
-            FileReader lecteur = new FileReader("src/tp9/PokemonData.txt");
+            FileReader lecteur = new FileReader("src/tp10/Data/PokemonData.txt");
             Scanner s = new Scanner(lecteur);
             while (s.hasNextLine()) {
                 String nom = s.next();
@@ -41,7 +58,7 @@ public class ChasseAuxPokemons {
                         attaques[i] = mappeAttaques.get(s.next());
                     }
                 }
-                pokemonsUtilises.add(new Pokemon(nom, type, level, diurne, attaque, defense, attaqueSpe, defenseSpe, attaques));
+                pokemonsUtilises.add(new Pokemon(mapPokemon.get(nom), nom, type, level, diurne, attaque, defense, attaqueSpe, defenseSpe, attaques));
                 s.nextLine();
             }
             lecteur.close();
@@ -52,7 +69,7 @@ public class ChasseAuxPokemons {
         ArrayList<Item> itemsUtilises = new ArrayList<Item>();
 
         try {
-            FileReader lecteur = new FileReader("src/tp9/ItemData.txt");
+            FileReader lecteur = new FileReader("src/tp10/Data/ItemData.txt");
             Scanner s = new Scanner(lecteur);
             while (s.hasNextLine()) {
                 String classe = s.next();
@@ -121,11 +138,19 @@ public class ChasseAuxPokemons {
             e.printStackTrace();
         }
 
+
         final Joueur moi = new Joueur("Laurent", "Jean", 20, new Pokemon[]{pokemonsUtilises.get(0), pokemonsUtilises.get(1), pokemonsUtilises.get(2)});
 
         for (Item item : itemsUtilises) {
             moi.ajouterItem(item);
-            System.out.println(item);
+        }
+
+        try {
+            moi.getPokedex().charger("src/tp10/Data/pokedexMoi.txt");
+        } catch (InputMismatchException e) {
+            System.out.println("On ne peut charger le fichier : " + e.getMessage());
+            e.printStackTrace();
+            System.exit(1);
         }
 
         Scanner scanner = new Scanner(System.in);
@@ -221,6 +246,9 @@ public class ChasseAuxPokemons {
                 case "8":
                     moi.afficherSac();
                     break;
+                case "9" :
+                    System.out.println(moi.getPokedex().getSetPokemons().toString());
+                    break;
                 case "stop":
                     reponse = "stop";
                     break;
@@ -230,6 +258,8 @@ public class ChasseAuxPokemons {
             }
 
         }
+
+        moi.getPokedex().sauvegarder("src/tp10/Data/pokedexMoi.txt");
         scanner.close();
 
     }

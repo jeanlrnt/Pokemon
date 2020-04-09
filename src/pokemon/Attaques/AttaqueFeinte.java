@@ -1,4 +1,6 @@
-package pokemon;
+package pokemon.Attaques;
+
+import pokemon.AttaquePhysique;
 
 public class AttaqueFeinte extends AttaquePhysique {
 

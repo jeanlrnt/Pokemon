@@ -1,4 +1,6 @@
-package pokemon;
+package pokemon.Attaques;
+
+import pokemon.AttaqueSpeciale;
 
 public class AttaquePistoleEau extends AttaqueSpeciale {
 

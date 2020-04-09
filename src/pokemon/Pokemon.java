@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Pokemon {
+    private  int numeroPokedex;
     private String nom;
     private String type;
     private int niveau;
@@ -20,8 +21,9 @@ public class Pokemon {
     private List<Attaque> attaques = new ArrayList<Attaque>(4);
 
 
-    public Pokemon(String nom, String type, int niveau, boolean diurne, String nomDonne, Joueur monJoueur, int attaque,
+    public Pokemon(int numeroPokedex, String nom, String type, int niveau, boolean diurne, String nomDonne, Joueur monJoueur, int attaque,
                    int defense, int attaqueSpeciale, int defenseSpeciale, Attaque[] attaques) {
+        this.numeroPokedex = numeroPokedex;
         this.nom = nom;
         this.type = type;
         this.niveau = niveau;
@@ -42,9 +44,9 @@ public class Pokemon {
         this.hp = 300;
     }
 
-    public Pokemon(String nom, String type, int niveau, boolean diurne, int attaque, int defense, int attaqueSpeciale,
+    public Pokemon(int numeroPokedex, String nom, String type, int niveau, boolean diurne, int attaque, int defense, int attaqueSpeciale,
                    int defenseSpeciale, Attaque[] attaques) {
-        this(nom, type, niveau, diurne, null, null, attaque, defense, attaqueSpeciale, defenseSpeciale, attaques);
+        this(numeroPokedex, nom, type, niveau, diurne, null, null, attaque, defense, attaqueSpeciale, defenseSpeciale, attaques);
     }
 
     public void utiliser(Utilisable item) {
@@ -257,11 +259,14 @@ public class Pokemon {
         return attaques;
     }
 
+    public int getNumeroPokedex() {
+        return numeroPokedex;
+    }
 
     @Override
     public String toString() {
         String listeAttaques = "";
-        for (Attaque atk : attaques) {
+        for (Attaque atk: attaques) {
             if (listeAttaques == "") {
                 listeAttaques += "{" + atk.getNom();
             } else {
@@ -269,7 +274,7 @@ public class Pokemon {
             }
         }
         listeAttaques += "}";
-        return "Pokemon [nom=" + nom + ", type=" + type + ", niveau=" + niveau + ", diurne=" + diurne + ", nomDonne="
+        return "Pokemon [" + numeroPokedex + " : nom=" + nom + ", type=" + type + ", niveau=" + niveau + ", diurne=" + diurne + ", nomDonne="
                 + nomDonne + ", monJoueur=\"" + monJoueur.getPrenom() + " " + monJoueur.getNom() + "\", appetit=" + appetit
                 + ", loyaute=" + loyaute + ", attaque=" + attaque + ", defense=" + defense + ", attaqueSpeciale="
                 + attaqueSpeciale + ", defenseSpeciale=" + defenseSpeciale + ", hp=" + hp + ", attaques=" + listeAttaques + "]";

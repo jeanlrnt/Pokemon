@@ -75,7 +75,7 @@ public abstract class Attaque {
     @Override
     public String toString() {
         String compatibilite = "{";
-        for (String type : compatibilites) {
+        for (String type: compatibilites) {
             if (compatibilite == "{" && type != null) {
                 compatibilite += type;
             } else if (type != null) {

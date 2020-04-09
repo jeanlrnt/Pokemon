@@ -7,6 +7,7 @@ public class Joueur {
     private Pokemon[] pokemons = new Pokemon[5];
     private Nourriture[] provisions;
     private Item[] sac;
+    private Pokedex pokedex;
 
     public Joueur(String nom, String prenom, int age, Pokemon[] pokemons) {
         this.nom = nom;
@@ -20,6 +21,8 @@ public class Joueur {
             }
         }
         this.sac = new Item[15];
+        this.pokedex = new Pokedex();
+        this.pokedex.rencontrer(pokemons);
     }
 
     public Joueur(String nom, String prenom, int age) {
@@ -118,6 +121,7 @@ public class Joueur {
                 pokemon.baisserLoyaute(100); // car la methode en question remet la valeur a zero si le resultat est negatif
                 pokemon.baisserAppetit(100);
                 pokemon.monterAppetit(10);
+                rencontrer(pokemon);
             } else {
                 System.out.println("Vous n'avez pas la place pour accueillir ce pokemon ! Vous devrez renoncer a un autre pokemon pour capturer celui-ci.");
             }
@@ -225,6 +229,10 @@ public class Joueur {
         }
     }
 
+    public void rencontrer(Pokemon pokemon) {
+        pokedex.rencontrer(pokemon);
+    }
+
     public String getNom() {
         return this.nom;
     }
@@ -247,6 +255,10 @@ public class Joueur {
 
     public Item[] getSac() {
         return sac;
+    }
+
+    public Pokedex getPokedex() {
+        return pokedex;
     }
 
     public String toString() {
