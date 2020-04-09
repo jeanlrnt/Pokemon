@@ -25,24 +25,24 @@ public class Pokemon {
 
     public void manger(Nourriture nourriture) {
         if (null != nourriture && nourriture.isCompatible(this)) {
-            //code exo 1:
-            // this.baisserAppetit(nourriture.getApport());
             nourriture.estMangee(this);
+            System.out.println("Ce pokemon a bien mange ! Miam miam ! ");
         }
     }
 
-    public void mettreANiveau() {
+    public void miseANiveau() {
         this.niveau += 1;
     }
 
-    public void sePresenter() {
-        System.out.println("Voici un pokemon " + this.nom + " de niveau " + this.niveau + ". ");
+    public String sePresente() {
         if (null != this.monJoueur) {
-            System.out.println("Il appartient a " + this.monJoueur.getNom() + ". ");
             if (null != this.nomDonne) {
-                System.out.println("Il s'appelle " + this.nomDonne);
+                return (this.nomDonne + "est un pokemon de genre " + this.nom + ", du type" + this.type + ", qui a le niveau  " + this.niveau);
+            } else {
+                return ("Voici un pokemon du genre " + this.nom + ", du type " + this.type + ", qui a le niveau " + this.niveau + ". Ce pokemon appartient a " + this.monJoueur.getNom() + this.monJoueur.getPrenom());
             }
         }
+        return ("Voici un pokemon du genre " + this.nom + ", du type " + this.type + ", qui a le niveau " + this.niveau + ". Ce pokemon n'a pas encore de maitre.");
     }
 
     public void direBonjour(String periode) {
