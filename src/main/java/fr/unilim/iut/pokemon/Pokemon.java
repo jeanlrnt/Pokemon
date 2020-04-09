@@ -1,111 +1,127 @@
-public class Joueur {
-    private String nom;
-    private String prenom;
-    private int age;
-    private Pokemon[] pokemons = new Pokemon[5];
+public class Pokemon {
+	private String nom;
+	private String type;
+	private int niveau;
+	private boolean diurne;
+	private String nomDonne;
+	private Joueur monJoueur;
+	private int appetit;
+	private int loyaute;
 
+	public Pokemon(String nom, String type, int niveau, boolean diurne, String nomDonne, Joueur monJoueur) {
+		this.nom = nom;
+		this.type = type;
+		this.niveau = niveau;
+		this.diurne = diurne;
+		this.nomDonne = nomDonne;
+		this.monJoueur = monJoueur;
+		this.appetit = 50;
+		this.loyaute = 0;
+	}
 
-    public Joueur(String nom, String prenom, int age, Pokemon[] pokemons) {
-        this.nom = nom;
-        this.prenom = prenom;
-        this.age = age;
-        this.pokemons = pokemons;
-        for (int i = 0; i < pokemons.length; i++) {
-            if (null != this.pokemons[i]) {
-                this.pokemons[i].setMonJoueur(this);
-            }
+	public Pokemon(String nom, String type, int age, boolean diurne) {
+		this(nom, type, age, diurne, null, null);
+	}
 
-        }
-    }
+	public void sePresenter() {
+		System.out.println("Voici un pokemon " + this.nom + " de niveau " + this.niveau + ". ");
+		if (null != this.monJoueur) {
+			System.out.println("Il appartient a " + this.monJoueur.getNom() + ". ");
+			if (null != this.nomDonne) {
+				System.out.println("Il s'appelle " + this.nomDonne);
+			}
+		}
+	}
 
-    public Joueur(String nom, String prenom, int age) {
-        this(nom, prenom, age, new Pokemon[]{null, null, null, null, null});
-    }
+	public void direBonjour(String periode) {
+		if (periode.equals("jour")) {
+			if (this.diurne) {
+				System.out.println(this.nom +" dit bonjour !");
+			}
+			else {
+				System.out.println(this.nom + " dit zzzzzzzzzzzzz !");
+			}
+		}
+		else {
+			if (this.diurne) {
+				System.out.println(this.nom + " dit zzzzzzzzzzzzz !");
+			}
+			else {
+				System.out.println(this.nom + " dit bonsoir !");
+			}
+		}
 
+	}
 
-    private int trouverPokemon(Pokemon pokemon) {
+	public void monterAppetit(int difference) {
+		this.appetit+= difference;
+		if (this.appetit > 100) {
+			this.appetit = 100;
+		}
+	}
 
-        boolean pokemonTrouve = false;
-        int iterateur = 0;
+	public void baisserAppetit(int difference) {
+		this.appetit -= difference;
+		if (this.appetit < 0) {
+			this.appetit = 0;
+		}
+	}
 
-        while (iterateur < this.pokemons.length && !pokemonTrouve) {
-            if (this.pokemons[iterateur] == pokemon) {
-                return iterateur;
-            }
-            iterateur++;
-        }
-        return -1;
-    }
+	public void monterLoyaute(int difference) {
+		this.loyaute += difference;
+		if (this.loyaute > 100) {
+			this.loyaute = 100;
+		}
+	}
 
-    public void capturerPokemon(Pokemon pokemon) {
-        if (pokemon.getMonJoueur() != null) {
-            System.out.println("Vous ne pouvez pas capturer le pokemon d'un autre joueur.");
-        } else {
-            int premierePlaceDisponible = this.trouverPokemon(null);
-            if (premierePlaceDisponible != -1) {
-                this.pokemons[premierePlaceDisponible] = pokemon;
-                System.out.println("Ce pokemon devient la propriete du joueur " + this.nom);
-                pokemon.setMonJoueur(this);
-                pokemon.baisserLoyaute(100);
-                pokemon.baisserAppetit(100);
-                pokemon.monterAppetit(10);
-            } else {
-                System.out.println("Vous n'avez pas la place pour accueillir ce pokemon ! Vous devrez renoncer a un autre pokemon pour capturer celui-ci.");
-            }
-        }
-    }
+	public void baisserLoyaute(int difference) {
+		this.loyaute -= difference;
+		if (this.loyaute < 0) {
+			this.loyaute = 0;
+		}
+	}
 
-    public void libererPokemon(Pokemon pokemon) {
-        int positionPokemon = this.trouverPokemon(pokemon);
-        if (positionPokemon != -1) {
-            this.pokemons[positionPokemon] = null;
-            System.out.println("Ce pokemon n'est plus la propriete du joueur " + this.nom);
-            pokemon.setMonJoueur(null);
-            pokemon.setNomDonne(null);
-            pokemon.baisserLoyaute(100);
-            pokemon.baisserAppetit(100);
-            pokemon.monterAppetit(10);
-        } else {
-            System.out.println("Vous n'etes pas le maitre de ce pokemon.");
-        }
-    }
+	public String getNomDonne() {
+		return this.nomDonne;
+	}
 
-    public void donnerNom(Pokemon pokemon, String nomDonne) {
-        if (pokemon != null) {
-            int positionPokemon = this.trouverPokemon(pokemon);
-            if (positionPokemon != -1) {
-                if (pokemon.getNomDonne().equals(null)) {
-                    pokemon.monterLoyaute(10);
-                } else {
-                    pokemon.baisserLoyaute(10);
-                }
-                pokemon.setNomDonne(nomDonne);
-            } else {
-                System.out.println("Vous ne pouvez pas nommer ce pokemon car vous n'etes pas son maitre !");
-            }
-        }
-    }
+	public String getNom() {
+		return this.nom;
+	}
 
+	public String getType() {
+		return this.type;
+	}
 
-    public String getNom() {
-        return this.nom;
-    }
+	public Joueur getMonJoueur() {
+		return this.monJoueur;
+	}
 
-    public String getPrenom() {
-        return this.prenom;
-    }
+	public void setNomDonne(String nomDonne) {
+		this.nomDonne = nomDonne;
+	}
 
-    public int getAge() {
-        return this.age;
-    }
+	public boolean isDiurne() {
+		return this.diurne;
+	}
 
-    public Pokemon[] getPokemons() {
-        return this.pokemons;
-    }
+	public void setMonJoueur(Joueur monJoueur) {
+		this.monJoueur = monJoueur;
+	}
 
-    public String toString() {
-        return ("[ Nom : " + this.nom + "; prenom : " + this.prenom + "; age" + this.age + " ]");
-    }
+	public int getAppetit() {
+		return this.appetit;
+	}
 
+	public int getLoyaute() {
+		return this.loyaute;
+	}
+
+	public String toString() {
+		return("[ Nom : " + this.nom + "; Type : " + this.type + "; Niveau : "
+				+this.niveau + "; Diurne : " + this.diurne + "; nomDonne : "
+				+this.nomDonne + "; monJoueur : " + this.monJoueur + "; Appetit :"
+				+this.appetit + "; Loyaute :" + this.loyaute + "]");
+	}
 
 }
