@@ -1,5 +1,3 @@
-package tp6;
-
 import java.util.Random;
 
 public class AttaqueSpeciale extends Attaque {

@@ -1,5 +1,3 @@
-package tp6;
-
 public class AttaqueMorsure extends AttaquePhysique {
 	
 	public AttaqueMorsure() {

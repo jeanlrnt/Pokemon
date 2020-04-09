@@ -1,5 +1,3 @@
-package tp6;
-
 public abstract class Attaque {
 	protected String nom;
 	protected String[] compatibilites;
