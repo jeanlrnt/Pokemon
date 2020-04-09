@@ -3,6 +3,15 @@ package pokemon;
 public class AttaqueMorsure extends AttaquePhysique {
 
     public AttaqueMorsure() {
-	super("Morsure", 60, 100, 25);
+	super("morsure", 60, 100, 25);
+    }
+
+    @Override
+    public AttaqueMorsure genererMemeAttaque(boolean generer) {
+        if (generer) {
+            return new AttaqueMorsure();
+        } else {
+            return null;
+        }
     }
 }

@@ -1,0 +1,6 @@
+nourriture Tartiflette 35 20 DRAGON FEU COMBAT NORMAL EAU ELECTRIQUE END
+nourriture Ratatouille 10 50 PLANTE EAU VOL FEU NORMAL ELECTRIQUE COMBAT END
+gourmandise Barre_Chocolatee 20 10 DRAGON FEU COMBAT EAU ELECTRIQUE END 7
+potion_magique Mojito 2
+jouet Balle 20 10 10 5
+outil Le_Petit_Marteau_des_Merveilles 10 2

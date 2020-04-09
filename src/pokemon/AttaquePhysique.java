@@ -38,4 +38,13 @@ public class AttaquePhysique extends Attaque {
         }
     }
 
+    @Override
+    public AttaquePhysique genererMemeAttaque(boolean generer) {
+        if (generer) {
+            return new AttaquePhysique(this.nom, this.puissance, this.precision, this.nombreRepetitions);
+        } else {
+            return null;
+        }
+    }
+
 }

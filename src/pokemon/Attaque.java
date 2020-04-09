@@ -39,6 +39,8 @@ public abstract class Attaque {
 
     public abstract boolean isCompatible(Pokemon pokemon);
 
+    public abstract Attaque genererMemeAttaque(boolean generer);
+
 
     public String getNom() {
         return nom;
@@ -72,8 +74,17 @@ public abstract class Attaque {
 
     @Override
     public String toString() {
+        String compatibilite = "{";
+        for (String type : compatibilites) {
+            if (compatibilite == "{" && type != null) {
+                compatibilite += type;
+            } else if (type != null) {
+                compatibilite += ", " + type;
+            }
+        }
+        compatibilite += "}";
         return nom + " : " + puissance + ", " + precision + ", " + repetitionsRestantes + "/"
-                + nombreRepetitions + ", " + compatibilites;
+                + nombreRepetitions + ", " + compatibilite;
     }
 
 }

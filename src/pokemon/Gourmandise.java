@@ -8,6 +8,10 @@ public class Gourmandise extends Nourriture {
         this.apportLoyaute = apportLoyaute;
     }
 
+    public Gourmandise() {
+        this(null, 0, 0, null, 0);
+    }
+
     @Override
     public Item genererMemeItem(boolean generer) {
         if (generer) {

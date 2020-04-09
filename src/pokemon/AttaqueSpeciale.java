@@ -45,4 +45,15 @@ public class AttaqueSpeciale extends Attaque {
         return trouve;
     }
 
+    @Override
+    public AttaqueSpeciale genererMemeAttaque(boolean generer) {
+        if (generer) {
+            return new AttaqueSpeciale(this.nom, this.compatibilites, this.puissance, this.precision, this.nombreRepetitions);
+        } else {
+            return null;
+        }
+    }
+
 }
+
+

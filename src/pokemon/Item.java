@@ -19,12 +19,14 @@ public abstract class Item {
             utilisationsRestantes = nombreUtilisations;
         }
     }
+
     public void baisserUtilisationsRestantes(int difference) {
         this.utilisationsRestantes -= difference;
         if (utilisationsRestantes < 0) {
             utilisationsRestantes = 0;
         }
     }
+
     public void resetUtilisationsRestantes() {
         this.utilisationsRestantes = nombreUtilisations;
     }

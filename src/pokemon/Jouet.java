@@ -10,6 +10,10 @@ public class Jouet extends Item implements Utilisable, Modifiable {
         this.apportLoyaute = apportLoyaute;
     }
 
+    public Jouet() {
+        this(null, 0, 0, 0, 0);
+    }
+
     @Override
     public Item genererMemeItem(boolean generer) {
         if (generer) {
@@ -33,7 +37,7 @@ public class Jouet extends Item implements Utilisable, Modifiable {
     public void utiliser(Joueur joueur, int indexPokemon) {
         if (null != joueur) {
             if (indexPokemon >= 0 && indexPokemon < joueur.getPokemons().length && !joueur.getPokemons()[indexPokemon].equals(null)) {
-                if (utilisationsRestantes > 0){
+                if (utilisationsRestantes > 0) {
                     joueur.getPokemons()[indexPokemon].monterAppetit(apportAppetit);
                     joueur.getPokemons()[indexPokemon].monterLoyaute(apportLoyaute);
                     this.baisserUtilisationsRestantes(1);

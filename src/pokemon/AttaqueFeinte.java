@@ -3,7 +3,15 @@ package pokemon;
 public class AttaqueFeinte extends AttaquePhysique {
 
     public AttaqueFeinte() {
-	super("Feinte", 30, 100, 10);
+	super("feinte", 30, 100, 10);
     }
 
+    @Override
+    public AttaqueFeinte genererMemeAttaque(boolean generer) {
+        if (generer) {
+            return new AttaqueFeinte();
+        } else {
+            return null;
+        }
+    }
 }

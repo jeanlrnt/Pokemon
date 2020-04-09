@@ -1,38 +1,142 @@
 package pokemon;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class ChasseAuxPokemons {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
 
-        final Pokemon piplup = new Pokemon("Piplup", "EAU", 10, true, 51, 53, 61, 56, new Attaque[]{new AttaqueMorsure(), new AttaquePistoleEau(), new AttaqueEnfer(), null});
-        final Pokemon rowlet = new Pokemon("Rowlet", "PLANTE", 10, false, 55, 55, 50, 50, new Attaque[]{new AttaqueMorsure(), new AttaqueTornadeFeuilles(), new AttaqueFeinte(), null});
-        final Pokemon totodile = new Pokemon("Totodile", "EAU", 8, true, 65, 64, 44, 48, new Attaque[]{new AttaqueMorsure(), new AttaqueCoupDeTete(), new AttaqueCroquer(), null});
+        HashMap<String, Attaque> mappeAttaques = new HashMap<String, Attaque>();
+        mappeAttaques.put("pistolet_a_eau", new AttaquePistoleEau());
+        mappeAttaques.put("bulle", new AttaqueBulle());
+        mappeAttaques.put("croquer", new AttaqueCroquer());
+        mappeAttaques.put("enfer", new AttaqueEnfer());
+        mappeAttaques.put("morsure", new AttaqueMorsure());
+        mappeAttaques.put("feinte", new AttaqueFeinte());
+        mappeAttaques.put("tornade_de_feuilles", new AttaqueTornadeFeuilles());
+        mappeAttaques.put("coup_de_tete", new AttaqueCoupDeTete());
 
-        final Nourriture tartiflette = new Nourriture("tartiflette", 35, 20, new String[]{"DRAGON", "FEU", "COMBAT", "NORMAL", "EAU", "ELECTRIQUE"});
-        final Nourriture ratatouille = new Nourriture("ratatouille", 10, 50, new String[]{"PLANTE", "EAU", "VOL", "FEU", "NORMAL", "ELECTRIQUE", "COMBAT"});
-        final Gourmandise barreChocolatee = new Gourmandise("Barre Chocolatee", 20, 10, new String[]{"DRAGON", "FEU", "COMBAT", "EAU", "ELECTRIQUE"}, 7);
-        final PotionMagique mojito = new PotionMagique("mojito", 2);
-        final Jouet balle = new Jouet("balle", 20, 10,10, 5);
-        final Outil marteau = new Outil("Le Petit Marteau des Merveilles", 10, 2);
+        ArrayList<Pokemon> pokemonsUtilises = new ArrayList<Pokemon>();
 
+        try {
+            FileReader lecteur = new FileReader("src/tp9/PokemonData.txt");
+            Scanner s = new Scanner(lecteur);
+            while (s.hasNextLine()) {
+                String nom = s.next();
+                String type = s.next();
+                int level = s.nextInt();
+                boolean diurne = s.nextBoolean();
+                int attaque = s.nextInt();
+                int defense = s.nextInt();
+                int attaqueSpe = s.nextInt();
+                int defenseSpe = s.nextInt();
+                Attaque[] attaques = new Attaque[4];
+                for (int i = 0; i < 4; i++) {
+                    if (i < 4) {
+                        attaques[i] = mappeAttaques.get(s.next());
+                    }
+                }
+                pokemonsUtilises.add(new Pokemon(nom, type, level, diurne, attaque, defense, attaqueSpe, defenseSpe, attaques));
+                s.nextLine();
+            }
+            lecteur.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        final Item[] tableauDeNourriture = new Nourriture[]{tartiflette, ratatouille, barreChocolatee, mojito};
+        ArrayList<Item> itemsUtilises = new ArrayList<Item>();
 
+        try {
+            FileReader lecteur = new FileReader("src/tp9/ItemData.txt");
+            Scanner s = new Scanner(lecteur);
+            while (s.hasNextLine()) {
+                String classe = s.next();
+                String nom;
+                String END;
+                int frequence;
+                int apport;
+                int apportLoyaute;
+                int nombreUtilisations;
+                int apportAppetit;
+                String[] compatibilite;
+                int i = 0;
+                switch (classe) {
+                    case "nourriture":
+                        nom = s.next();
+                        frequence = s.nextInt();
+                        apport = s.nextInt();
+                        compatibilite = new String[18];
+                        i = 0;
+                        while (!s.hasNext("END")) {
+                            compatibilite[i] = s.next();
+                            i++;
+                        }
+                        itemsUtilises.add(new Nourriture(nom, frequence, apport, compatibilite));
+                        break;
+                    case "gourmandise":
+                        nom = s.next();
+                        frequence = s.nextInt();
+                        apport = s.nextInt();
+                        compatibilite = new String[18];
+                        i = 0;
+                        while (!s.hasNext("END")) {
+                            compatibilite[i] = s.next();
+                            i++;
+                        }
+                        END = s.next();
+                        apportLoyaute = s.nextInt();
+                        itemsUtilises.add(new Gourmandise(nom, frequence, apport, compatibilite, apportLoyaute));
+                        break;
+                    case "potion_magique":
+                        nom = s.next();
+                        frequence = s.nextInt();
+                        itemsUtilises.add(new PotionMagique(nom, frequence));
+                        break;
+                    case "jouet":
+                        nom = s.next();
+                        frequence = s.nextInt();
+                        nombreUtilisations = s.nextInt();
+                        apportAppetit = s.nextInt();
+                        apportLoyaute = s.nextInt();
+                        itemsUtilises.add(new Jouet(nom, frequence, nombreUtilisations, apportAppetit, apportLoyaute));
+                        break;
+                    case "outil":
+                        nom = s.next();
+                        frequence = s.nextInt();
+                        nombreUtilisations = s.nextInt();
+                        itemsUtilises.add(new Outil(nom, frequence, nombreUtilisations));
+                        break;
+                    default:
+                        break;
+                }
+                if (s.hasNextLine()) s.nextLine();
+            }
+            lecteur.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        final Joueur moi = new Joueur("Laurent", "Jean", 20, new Pokemon[]{piplup, rowlet, totodile});
+        final Joueur moi = new Joueur("Laurent", "Jean", 20, new Pokemon[]{pokemonsUtilises.get(0), pokemonsUtilises.get(1), pokemonsUtilises.get(2)});
 
+        for (Item item : itemsUtilises) {
+            moi.ajouterItem(item);
+            System.out.println(item);
+        }
 
         Scanner scanner = new Scanner(System.in);
 
         double alea;
-        boolean generer = false;
+        boolean generer;
         int reponseEntiere;
-        Item[] nourritureGeneree = new Nourriture[tableauDeNourriture.length];
+        ArrayList<Item> nourritureGeneree = new ArrayList<Item>();
         String reponse = "ok";
         while (!reponse.equals("stop")) {
-            System.out.println("1. Afficher les Pokemons \n2. Caresser un pokemon \n3. Regader le sac a Provisions \n4. Nourrir un pokemon\n5. Chasse a la nourriture\n6. main\n7. Fight\n Quel est votre choix? ");
+            System.out.println("1. Afficher les Pokemons \n2. Caresser un pokemon \n3. Regader le sac a Provisions \n4. Nourrir un pokemon\n5. Chasse a la nourriture\n6. main\n7. Fight\n8. Afficher le sac\n Quel est votre choix? ");
             reponse = scanner.next();
             switch (reponse) {
                 case "1":
@@ -67,18 +171,14 @@ public class ChasseAuxPokemons {
                     String num2 = "ok";
                     while (!num2.equals("stop")) {
                         alea = Math.random() * 100;
-                        for (int j = 0; j < tableauDeNourriture.length; j++) {
-                            if (alea < tableauDeNourriture[j].getFrequence()) {
-                                generer = true;
-                            } else {
-                                generer = false;
-                            }
-                            nourritureGeneree[j] = tableauDeNourriture[j].genererMemeItem(generer);
+                        for (int j = 0; j < itemsUtilises.size(); j++) {
+                            generer = alea < itemsUtilises.get(j).getFrequence();
+                            nourritureGeneree.add(itemsUtilises.get(j).genererMemeItem(generer));
                             if (generer) {
-                                System.out.println("Vous avez trouve un.e/du/de la " + tableauDeNourriture[j].getNom() + ". Voulez-vous la prendre ? Ecrivez oui si c'est le cas.");
+                                System.out.println("Vous avez trouve un.e/du/de la " + itemsUtilises.get(j).getNom() + ". Voulez-vous la prendre ? Ecrivez oui si c'est le cas.");
                                 reponse = scanner.next();
                                 if (reponse.equals("oui")) {
-                                    moi.ajouterProvision((Nourriture) nourritureGeneree[j]);
+                                    moi.ajouterProvision((Nourriture) nourritureGeneree.get(j));
                                 }
                             }
                         }
@@ -88,10 +188,10 @@ public class ChasseAuxPokemons {
                     System.out.println("Encore?");
                     break;
                 case "6":
-                    moi.ajouterItem(marteau);
-                    moi.ajouterItem(balle);
+                    moi.ajouterItem(itemsUtilises.get(6));
+                    moi.ajouterItem(itemsUtilises.get(5));
                     moi.afficherSac();
-                    moi.donnerItem(0,1);
+                    moi.donnerItem(0, 1);
                     moi.afficherSac();
                     moi.modifierItem(0, 1);
                     moi.afficherSac();
@@ -99,10 +199,10 @@ public class ChasseAuxPokemons {
                 case "7":
                     int j = 0;
                     int k;
-                    while (!piplup.etreEvanoui() || !rowlet.etreEvanoui()) {
+                    while (!moi.getPokemons()[0].etreEvanoui() || !moi.getPokemons()[1].etreEvanoui()) {
                         System.out.println("Tour " + (j + 1) + " : ");
-                        System.out.println(piplup.getNom() + " : " + piplup.getHp() + " hp");
-                        System.out.println(rowlet.getNom() + " : " + rowlet.getHp() + " hp\n");
+                        System.out.println(moi.getPokemons()[0].getNom() + " : " + moi.getPokemons()[0].getHp() + " hp");
+                        System.out.println(moi.getPokemons()[1].getNom() + " : " + moi.getPokemons()[1].getHp() + " hp\n");
                         for (int i = 0; i < 2; i++) {
                             if (i == 0) {
                                 k = 1;
@@ -117,6 +217,9 @@ public class ChasseAuxPokemons {
                     for (int i = 0; i < 2; i++) {
                         moi.getPokemons()[i].rechargerAttaques();
                     }
+                    break;
+                case "8":
+                    moi.afficherSac();
                     break;
                 case "stop":
                     reponse = "stop";

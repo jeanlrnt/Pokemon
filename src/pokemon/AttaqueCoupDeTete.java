@@ -3,7 +3,15 @@ package pokemon;
 public class AttaqueCoupDeTete extends AttaquePhysique {
 
     public AttaqueCoupDeTete() {
-	super("Coup de tete", 70, 100, 15);
+        super("coup_de_tete", 70, 100, 15);
     }
 
+    @Override
+    public AttaqueCoupDeTete genererMemeAttaque(boolean generer) {
+        if (generer) {
+            return new AttaqueCoupDeTete();
+        } else {
+            return null;
+        }
+    }
 }

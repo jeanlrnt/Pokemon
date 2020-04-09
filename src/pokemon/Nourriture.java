@@ -1,7 +1,5 @@
 package pokemon;
 
-import java.util.Arrays;
-
 public class Nourriture extends Item implements Utilisable {
     protected int apport;
     protected String[] compatibilites;
@@ -26,7 +24,7 @@ public class Nourriture extends Item implements Utilisable {
     public void utiliser(Joueur joueur, int indexPokemon) {
         if (null != joueur) {
             if (indexPokemon >= 0 && indexPokemon < joueur.getPokemons().length && !joueur.getPokemons()[indexPokemon].equals(null)) {
-                if (this.isCompatible(joueur.getPokemons()[indexPokemon]) && utilisationsRestantes > 0){
+                if (this.isCompatible(joueur.getPokemons()[indexPokemon]) && utilisationsRestantes > 0) {
                     joueur.getPokemons()[indexPokemon].baisserAppetit(apport);
                     this.baisserUtilisationsRestantes(1);
                 }
@@ -62,6 +60,15 @@ public class Nourriture extends Item implements Utilisable {
 
     @Override
     public String toString() {
-        return super.toString() + ", " + apport + ", " + Arrays.toString(compatibilites);
+        String compatibilite = "{";
+        for (String type : compatibilites) {
+            if (compatibilite == "{" && type != null) {
+                compatibilite += type;
+            } else if (type != null) {
+                compatibilite += ", " + type;
+            }
+        }
+        compatibilite += "}";
+        return super.toString() + ", " + apport + ", " + compatibilite;
     }
 }
