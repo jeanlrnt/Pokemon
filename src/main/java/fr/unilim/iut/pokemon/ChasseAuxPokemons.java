@@ -6,8 +6,12 @@ public class ChasseAuxPokemons {
         Pokemon rowlet = new Pokemon("Rowlet", "PLANTE", 10, false);
         Pokemon totodile = new Pokemon("Totodile", "EAU", 8, true);
 
-        piplup.direBonjour(args[0]);
-        rowlet.direBonjour(args[0]);
-        totodile.direBonjour(args[0]);
+        System.out.println(piplup);
+        piplup.sePresenter();
+        System.out.println(rowlet);
+        System.out.println(totodile);
+        Joueur sacha = new Joueur("laurent", "jean", 20);
+        sacha.capturerPokemon(piplup);
+        piplup.sePresenter();
     }
 }
