@@ -9,7 +9,16 @@ public class Joueur {
         this.nom = nom;
         this.prenom = prenom;
         this.age = age;
-        this.pokemons = pokemons;
+
+        int tailleMinimale = this.pokemons.length;
+        if (pokemons.length < tailleMinimale) {
+            tailleMinimale = pokemons.length;
+        }
+
+        for (int i = 0; i < tailleMinimale; i++) {
+            this.pokemons[i] = pokemons[i];
+        }
+
         this.provisions = new Nourriture[10];
         for (int i = 0; i < pokemons.length; i++) {
             if (null != this.pokemons[i]) {
@@ -83,12 +92,6 @@ public class Joueur {
                 System.out.println("Oui, moi je t'aime aussi !");
             } else {
                 System.out.println("Mmmm, ca sent bien ! Et sous mon oreille gauche ?");
-            }
-        } else {
-            if (null == pokemon) {
-                System.out.println("Il faut bien specifier un pokemon valide !");
-            } else {
-                System.out.println("Vous ne pouvez pas caresser le pokemon d'un autre joueur !");
             }
         }
     }

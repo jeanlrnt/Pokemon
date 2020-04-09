@@ -1,4 +1,3 @@
-// le mot cl� extends indique l'h�ritage
 public class Gourmandise extends Nourriture {
     private int apportLoyaute;
 
@@ -10,7 +9,7 @@ public class Gourmandise extends Nourriture {
     @Override
     public Gourmandise genererMemeNourriture(boolean generer) {
         if (generer) {
-            return new Gourmandise(this.apport, this.nom, this.compatibilites, this.frequence, this.apportLoyaute);
+            return new Gourmandise(this.getApport(), this.getNom(), this.getCompatibilites(), this.getFrequence(), this.apportLoyaute);
         } else {
             return null;
         }
@@ -20,7 +19,7 @@ public class Gourmandise extends Nourriture {
     @Override
     public void estMangee(Pokemon pokemon) {
         if (null != pokemon) {
-            pokemon.baisserAppetit(this.apport);
+            pokemon.baisserAppetit(this.getApport());
             if (null != pokemon.getMonJoueur()) {
                 pokemon.monterLoyaute(this.apportLoyaute);
             }

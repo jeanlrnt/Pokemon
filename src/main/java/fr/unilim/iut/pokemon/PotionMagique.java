@@ -8,7 +8,7 @@ public class PotionMagique extends Nourriture {
     @Override
     public PotionMagique genererMemeNourriture(boolean generer) {
         if (generer) {
-            return new PotionMagique(this.nom, this.frequence);
+            return new PotionMagique(this.getNom(), this.getFrequence());
         } else {
             return null;
         }
@@ -17,7 +17,7 @@ public class PotionMagique extends Nourriture {
     @Override
     public void estMangee(Pokemon pokemon) {
         if (null != pokemon) {
-            pokemon.mettreANiveau();
+            pokemon.miseANiveau();
         }
     }
 

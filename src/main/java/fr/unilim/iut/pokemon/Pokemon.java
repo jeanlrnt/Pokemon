@@ -8,7 +8,20 @@ public class Pokemon {
     private int appetit;
     private int loyaute;
 
-    public Pokemon(String nom, String type, int niveau, boolean diurne, String nomDonne, Joueur monJoueur) {
+    // ajoutes en TP 6
+
+    private int attaque;
+    private int defense;
+    private int attaqueSpeciale;
+    private int defenseSpeciale;
+    private int hp;
+
+    private Attaque[] attaques = new Attaque[4];
+
+    public Pokemon(String nom, String type, int niveau,
+                   boolean diurne, String nomDonne, Joueur monJoueur,
+                   int attaque, int defense, int attaqueSpeciale,
+                   int defenseSpeciale, Attaque[] attaques) {
         this.nom = nom;
         this.type = type;
         this.niveau = niveau;
@@ -17,10 +30,90 @@ public class Pokemon {
         this.monJoueur = monJoueur;
         this.appetit = 50;
         this.loyaute = 0;
+
+        // ajoutees en TP 6
+        this.attaque = attaque;
+        this.defense = defense;
+        this.attaqueSpeciale = attaqueSpeciale;
+        this.defenseSpeciale = defenseSpeciale;
+        this.hp = 30;
+
+        for (int i = 0; i < attaques.length; i++) {
+            this.ajouterAttaque(attaques[i]);
+            ;
+        }
     }
 
-    public Pokemon(String nom, String type, int age, boolean diurne) {
-        this(nom, type, age, diurne, null, null);
+    public Pokemon(String nom, String type, int age,
+                   boolean diurne, int attaque, int defense,
+                   int attaqueSpeciale, int defenseSpeciale,
+                   Attaque[] attaques) {
+        this(nom, type, age, diurne, null, null, attaque, defense, attaqueSpeciale, defenseSpeciale, attaques);
+    }
+
+
+    private int trouverAttaque(Attaque attaque) {
+
+        for (int i = 0; i < this.attaques.length; i++) {
+            if (this.attaques[i] == attaque) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void ajouterAttaque(Attaque attaque) {
+        if (attaque.isCompatible(this)) {
+            int positionLibre = this.trouverAttaque(null);
+            if (positionLibre != -1) {
+                this.attaques[positionLibre] = attaque;
+            }
+
+        }
+    }
+
+    public void ajouterAttaque(Attaque attaque, int i) {
+        if (i >= 0 && i < this.attaques.length) {
+            if (attaque.isCompatible(this)) {
+                this.attaques[i] = attaque;
+            }
+        }
+    }
+
+    public void rechargerAttaques() {
+        for (int i = 0; i < this.attaques.length; i++) {
+            if (null != this.attaques[i]) {
+                this.attaques[i].resetNombreRepetitions();
+            }
+        }
+    }
+
+    public void blessure(int dommage) {
+        this.hp -= dommage;
+        if (this.hp < 0) {
+            this.hp = 0;
+        }
+    }
+
+    public boolean sEstEvanoui() {
+        return (this.hp == 0);
+    }
+
+    public void utiliserAttaque(int index, Pokemon victime) {
+        if (!this.sEstEvanoui() && index >= 0 && index < this.attaques.length && this.attaques[index] != null) {
+            this.attaques[index].utiliserAttaque(this, victime);
+
+        }
+    }
+
+    public void afficherEtatAttaques() {
+        String attaques = "";
+        for (int i = 0; i < this.attaques.length; i++) {
+            if (null != this.attaques[i]) {
+                attaques += i + " : " + this.attaques[i].getNom() + ", " + this.attaques[i].getRepetitionsRestantes() + "/" + this.attaques[i].getNombreRepetitions() + "\n";
+            }
+        }
+        System.out.println(attaques);
     }
 
     public void manger(Nourriture nourriture) {
@@ -102,6 +195,10 @@ public class Pokemon {
         return this.type;
     }
 
+    public int getNiveau() {
+        return this.niveau;
+    }
+
     public Joueur getMonJoueur() {
         return this.monJoueur;
     }
@@ -126,11 +223,52 @@ public class Pokemon {
         return this.loyaute;
     }
 
+    public int getAttaque() {
+        return this.attaque;
+    }
+
+    public int getDefense() {
+        return this.defense;
+    }
+
+    public int getAttaqueSpeciale() {
+        return this.attaqueSpeciale;
+    }
+
+    public int getDefenseSpeciale() {
+        return this.defenseSpeciale;
+    }
+
+    public int getHP() {
+        return this.hp;
+    }
+
+    public Attaque[] getAttaques() {
+        return this.attaques;
+    }
+
     public String toString() {
+        String attaques = "{";
+        for (int i = 0; i < this.attaques.length - 1; i++) {
+            if (this.attaques[i] != null) {
+                attaques += this.attaques[i] + ", ";
+            }
+
+        }
+
+        if (this.attaques[this.attaques.length - 1] != null) {
+            attaques += this.attaques[this.attaques.length - 1];
+        }
+
+        attaques += "}";
+
         return ("[ Nom : " + this.nom + "; Type : " + this.type + "; Niveau : "
                 + this.niveau + "; Diurne : " + this.diurne + "; nomDonne : "
                 + this.nomDonne + "; monJoueur : " + this.monJoueur + "; Appetit :"
-                + this.appetit + "; Loyaute :" + this.loyaute + "]");
+                + this.appetit + "; Loyaute :" + this.loyaute + "; Attaque" + this.attaque
+                + "; Defense : " + this.defense + "; AttaqueSpeciale : "
+                + "; DefenseSpeciale : " + this.defenseSpeciale + "; HP : " + this.hp
+                + "; Attaques : " + attaques + "]");
     }
 
 }
