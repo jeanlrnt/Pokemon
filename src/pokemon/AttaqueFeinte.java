@@ -1,5 +1,9 @@
+package pokemon;
+
 public class AttaqueFeinte extends AttaquePhysique {
-	public AttaqueFeinte() {
-		super("feinte", 30, 100, 10);
-	}
+
+    public AttaqueFeinte() {
+	super("Feinte", 30, 100, 10);
+    }
+
 }

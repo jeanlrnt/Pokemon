@@ -1,71 +1,67 @@
-public class Nourriture {
+package pokemon;
+
+import java.util.Arrays;
+
+public class Nourriture extends Item implements Utilisable {
     protected int apport;
-    protected String nom;
     protected String[] compatibilites;
-    protected int frequence;
-    protected static String[] tousLesTypesDePokemons = {"PLANTE", "POISON", "FEU", "DRAGON", "VOL", "EAU", "INSECTE", "NORMAL", "FONCE", "ELECTRIQUE", "TELEPATIQUE", "GLACE", "ACIER", "TERRE", "FEE", "COMBAT", "ROCHE", "FANTOME"};
+    public static String[] tousLesTypesDePokemons = {"PLANTE", "POISON", "FEU", "DRAGON", "VOL", "EAU", "INSECTE", "NORMAL", "FONCE", "ELECTRIQUE", "TELEPATIQUE", "GLACE", "ACIER", "TERRE", "FEE", "COMBAT", "ROCHE", "FANTOME"};
 
-    public Nourriture(int apport, String nom, String[] compatibilites, int frequence) {
+    public Nourriture(String nom, int frequence, int apport, String[] compatibilites) {
+        super(nom, frequence, 1);
         this.apport = apport;
-        this.nom = nom;
         this.compatibilites = compatibilites;
-        this.frequence = frequence;
     }
 
-    public boolean isCompatible(Pokemon pokemon) {
-        boolean trouve = false;
-        int i = 0;
-        while (i < this.compatibilites.length && !trouve) {
-            if (this.compatibilites[i].equals(pokemon.getType())) {
-                trouve = true;
-            }
-            i++;
-        }
-
-        if (!trouve) {
-            System.out.println("Un pokemon de type " + pokemon.getType() + " n'est pas compatible avec une nourriture de type " + this.nom + ".");
-        }
-        return trouve;
-    }
-
-
-    public Nourriture genererMemeNourriture(boolean generer) {
+    @Override
+    public Item genererMemeItem(boolean generer) {
         if (generer) {
-            return new Nourriture(this.apport, this.nom, this.compatibilites, this.frequence);
+            return new Nourriture(this.nom, this.frequence, this.apport, this.compatibilites);
         } else {
             return null;
         }
     }
 
-    public void estMangee(Pokemon pokemon) {
-        if (null != pokemon) {
-            pokemon.baisserAppetit(this.apport);
+    @Override
+    public void utiliser(Joueur joueur, int indexPokemon) {
+        if (null != joueur) {
+            if (indexPokemon >= 0 && indexPokemon < joueur.getPokemons().length && !joueur.getPokemons()[indexPokemon].equals(null)) {
+                if (this.isCompatible(joueur.getPokemons()[indexPokemon]) && utilisationsRestantes > 0){
+                    joueur.getPokemons()[indexPokemon].baisserAppetit(apport);
+                    this.baisserUtilisationsRestantes(1);
+                }
+            }
         }
+    }
+
+    public boolean isCompatible(Pokemon pokemon) {
+        boolean trouve = false;
+        if (null != pokemon) {
+            int i = 0;
+            while (i < this.compatibilites.length && !trouve) {
+                if (this.compatibilites[i].equals(pokemon.getType())) {
+                    trouve = true;
+                }
+                i++;
+            }
+
+            if (!trouve) {
+                System.out.println("Un pokemon de type " + pokemon.getType() + " n'est pas compatible avec une nourriture de type " + this.nom + ".");
+            }
+        }
+        return trouve;
     }
 
     public int getApport() {
-        return this.apport;
-    }
-
-    public String getNom() {
-        return this.nom;
+        return apport;
     }
 
     public String[] getCompatibilites() {
-        return this.compatibilites;
+        return compatibilites;
     }
 
-    public int getFrequence() {
-        return this.frequence;
-    }
-
+    @Override
     public String toString() {
-        String compatibilites = "{";
-        for (int i = 0; i < this.compatibilites.length - 1; i++) {
-            compatibilites += this.compatibilites[i] + ", ";
-        }
-        compatibilites += this.compatibilites[this.compatibilites.length - 1];
-        return (this.nom + "; " + this.apport + "; " + this.frequence + "/100; " + compatibilites + "}");
+        return super.toString() + ", " + apport + ", " + Arrays.toString(compatibilites);
     }
-
 }

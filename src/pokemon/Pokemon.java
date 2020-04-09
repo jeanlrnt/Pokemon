@@ -1,3 +1,5 @@
+package pokemon;
+
 public class Pokemon {
     private String nom;
     private String type;
@@ -7,119 +9,51 @@ public class Pokemon {
     private Joueur monJoueur;
     private int appetit;
     private int loyaute;
-
-    // ajoutes en TP 6
-
     private int attaque;
     private int defense;
     private int attaqueSpeciale;
     private int defenseSpeciale;
     private int hp;
-
     private Attaque[] attaques = new Attaque[4];
 
-    public Pokemon(String nom, String type, int niveau,
-                   boolean diurne, String nomDonne, Joueur monJoueur,
-                   int attaque, int defense, int attaqueSpeciale,
-                   int defenseSpeciale, Attaque[] attaques) {
+
+    public Pokemon(String nom, String type, int niveau, boolean diurne, String nomDonne, Joueur monJoueur, int attaque,
+                   int defense, int attaqueSpeciale, int defenseSpeciale, Attaque[] attaques) {
         this.nom = nom;
         this.type = type;
         this.niveau = niveau;
         this.diurne = diurne;
         this.nomDonne = nomDonne;
         this.monJoueur = monJoueur;
-        this.appetit = 50;
-        this.loyaute = 0;
-
-        // ajoutees en TP 6
         this.attaque = attaque;
         this.defense = defense;
         this.attaqueSpeciale = attaqueSpeciale;
         this.defenseSpeciale = defenseSpeciale;
-        this.hp = 30;
-
         for (int i = 0; i < attaques.length; i++) {
-            this.ajouterAttaque(attaques[i]);
-            ;
-        }
-    }
-
-    public Pokemon(String nom, String type, int age,
-                   boolean diurne, int attaque, int defense,
-                   int attaqueSpeciale, int defenseSpeciale,
-                   Attaque[] attaques) {
-        this(nom, type, age, diurne, null, null, attaque, defense, attaqueSpeciale, defenseSpeciale, attaques);
-    }
-
-
-    private int trouverAttaque(Attaque attaque) {
-
-        for (int i = 0; i < this.attaques.length; i++) {
-            if (this.attaques[i] == attaque) {
-                return i;
+            if (null != attaques[i]) {
+                this.ajouterAttaque(attaques[i]);
             }
         }
-        return -1;
+        this.appetit = 50;
+        this.loyaute = 0;
+        this.hp = 300;
     }
 
-    public void ajouterAttaque(Attaque attaque) {
-        if (attaque.isCompatible(this)) {
-            int positionLibre = this.trouverAttaque(null);
-            if (positionLibre != -1) {
-                this.attaques[positionLibre] = attaque;
+    public Pokemon(String nom, String type, int niveau, boolean diurne, int attaque, int defense, int attaqueSpeciale,
+                   int defenseSpeciale, Attaque[] attaques) {
+        this(nom, type, niveau, diurne, null, null, attaque, defense, attaqueSpeciale, defenseSpeciale, attaques);
+    }
+
+    public void utiliser(Utilisable item) {
+        if (null != item) {
+            if (null != this.monJoueur) {
+                if (this.monJoueur.trouverPokemon(this) != -1) {
+                    this.utiliser(item);
+                    System.out.println(this.nom + " utilise " + item);
+                }
+            } else {
+                System.out.println("Le pokemon n'a pas de maitre, il ne peut donc pas recevoir d'objet utilisable..");
             }
-
-        }
-    }
-
-    public void ajouterAttaque(Attaque attaque, int i) {
-        if (i >= 0 && i < this.attaques.length) {
-            if (attaque.isCompatible(this)) {
-                this.attaques[i] = attaque;
-            }
-        }
-    }
-
-    public void rechargerAttaques() {
-        for (int i = 0; i < this.attaques.length; i++) {
-            if (null != this.attaques[i]) {
-                this.attaques[i].resetNombreRepetitions();
-            }
-        }
-    }
-
-    public void blessure(int dommage) {
-        this.hp -= dommage;
-        if (this.hp < 0) {
-            this.hp = 0;
-        }
-    }
-
-    public boolean sEstEvanoui() {
-        return (this.hp == 0);
-    }
-
-    public void utiliserAttaque(int index, Pokemon victime) {
-        if (!this.sEstEvanoui() && index >= 0 && index < this.attaques.length && this.attaques[index] != null) {
-            this.attaques[index].utiliserAttaque(this, victime);
-
-        }
-    }
-
-    public void afficherEtatAttaques() {
-        String attaques = "";
-        for (int i = 0; i < this.attaques.length; i++) {
-            if (null != this.attaques[i]) {
-                attaques += i + " : " + this.attaques[i].getNom() + ", " + this.attaques[i].getRepetitionsRestantes() + "/" + this.attaques[i].getNombreRepetitions() + "\n";
-            }
-        }
-        System.out.println(attaques);
-    }
-
-    public void manger(Nourriture nourriture) {
-        if (null != nourriture && nourriture.isCompatible(this)) {
-            nourriture.estMangee(this);
-            System.out.println("Ce pokemon a bien mange ! Miam miam ! ");
         }
     }
 
@@ -183,6 +117,78 @@ public class Pokemon {
         }
     }
 
+    private int trouverAttaque(Attaque attaque) {
+
+        int iterateur = 0;
+
+        while (iterateur < this.attaques.length) {
+            if (this.attaques[iterateur] == attaque) {
+                return iterateur;
+            }
+            iterateur++;
+        }
+        return -1;
+    }
+
+    public void ajouterAttaque(Attaque attaque) {
+        int positionLibre = this.trouverAttaque(null);
+        if (positionLibre != -1 && attaque.isCompatible(this)) {
+            this.attaques[positionLibre] = attaque;
+        } else {
+            System.out.println("Vous n'avez plus de place pour cette attaque ou l'attaque n'est pas compatible.");
+        }
+    }
+
+    public void ajouterAttaque(Attaque attaque, int i) {
+        if (i >= 0 && i < attaques.length && attaque.isCompatible(this)) {
+            this.attaques[i] = attaque;
+        } else {
+            System.out.println("Vous n'avez plus de place pour cette attaque ou l'attaque n'est pas compatible.");
+        }
+    }
+
+    public void rechargerAttaques() {
+        for (int i = 0; i < this.attaques.length; i++) {
+            if (null != this.attaques[i]) {
+                this.attaques[i].resetNombreRepetitions();
+            }
+        }
+    }
+
+    public void blessure(int dommage) {
+        this.hp -= dommage;
+        if (this.hp < 0) {
+            this.hp = 0;
+        }
+    }
+
+    public boolean etreEvanoui() {
+        if (this.hp == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void utiliserAttaque(int index, Pokemon victime) {
+        if (!victime.etreEvanoui()) {
+            if (index < 0 || index >= this.attaques.length || null == this.attaques[index]) {
+                System.out.println("L'attaque n'existe pas vous passez votre tour..");
+            } else {
+                this.attaques[index].utiliserAttaque(this, victime);
+            }
+        }
+    }
+
+    public void afficherAttaques() {
+        System.out.println("Attaques de " + this.getNom() + " :");
+        for (int i = 0; i < attaques.length; i++) {
+            if (null != attaques[i]) {
+                System.out.println(i + " : " + attaques[i].getNom() + ", " + attaques[i].getRepetitionsRestantes() + "/" + attaques[i].getNombreRepetitions());
+            }
+        }
+    }
+
     public String getNomDonne() {
         return this.nomDonne;
     }
@@ -193,10 +199,6 @@ public class Pokemon {
 
     public String getType() {
         return this.type;
-    }
-
-    public int getNiveau() {
-        return this.niveau;
     }
 
     public Joueur getMonJoueur() {
@@ -223,52 +225,41 @@ public class Pokemon {
         return this.loyaute;
     }
 
+    public int getNiveau() {
+        return niveau;
+    }
+
     public int getAttaque() {
-        return this.attaque;
+        return attaque;
     }
 
     public int getDefense() {
-        return this.defense;
+        return defense;
     }
 
     public int getAttaqueSpeciale() {
-        return this.attaqueSpeciale;
+        return attaqueSpeciale;
     }
 
     public int getDefenseSpeciale() {
-        return this.defenseSpeciale;
+        return defenseSpeciale;
     }
 
-    public int getHP() {
-        return this.hp;
+    public int getHp() {
+        return hp;
     }
 
     public Attaque[] getAttaques() {
-        return this.attaques;
+        return attaques;
     }
 
+
+    @Override
     public String toString() {
-        String attaques = "{";
-        for (int i = 0; i < this.attaques.length - 1; i++) {
-            if (this.attaques[i] != null) {
-                attaques += this.attaques[i] + ", ";
-            }
-
-        }
-
-        if (this.attaques[this.attaques.length - 1] != null) {
-            attaques += this.attaques[this.attaques.length - 1];
-        }
-
-        attaques += "}";
-
-        return ("[ Nom : " + this.nom + "; Type : " + this.type + "; Niveau : "
-                + this.niveau + "; Diurne : " + this.diurne + "; nomDonne : "
-                + this.nomDonne + "; monJoueur : " + this.monJoueur + "; Appetit :"
-                + this.appetit + "; Loyaute :" + this.loyaute + "; Attaque" + this.attaque
-                + "; Defense : " + this.defense + "; AttaqueSpeciale : "
-                + "; DefenseSpeciale : " + this.defenseSpeciale + "; HP : " + this.hp
-                + "; Attaques : " + attaques + "]");
+        return "Pokemon [nom=" + nom + ", type=" + type + ", niveau=" + niveau + ", diurne=" + diurne + ", nomDonne="
+                + nomDonne + ", monJoueur=" + monJoueur + ", appetit=" + appetit + ", loyaute=" + loyaute + ", attaque="
+                + attaque + ", defense=" + defense + ", attaqueSpeciale=" + attaqueSpeciale + ", defenseSpeciale="
+                + defenseSpeciale + ", hp=" + hp + ", attaques=" + getAttaques() + "]";
     }
 
 }

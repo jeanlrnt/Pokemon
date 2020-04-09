@@ -1,5 +1,9 @@
+package pokemon;
+
 public class AttaqueTornadeFeuilles extends AttaqueSpeciale {
-	public AttaqueTornadeFeuilles() {
-		super("tornade feuilles", new String[] {"PLANTE"}, 65, 90, 10);
-	}
+
+    public AttaqueTornadeFeuilles() {
+	super("Tornade de feuilles", new String[] {"PLANTE"}, 65, 90, 10);
+    }
+
 }

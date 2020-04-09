@@ -1,6 +1,8 @@
+package pokemon;
+
 public class AttaqueMorsure extends AttaquePhysique {
-	
-	public AttaqueMorsure() {
-		super("morsure", 60, 100, 25);
-	}
+
+    public AttaqueMorsure() {
+	super("Morsure", 60, 100, 25);
+    }
 }

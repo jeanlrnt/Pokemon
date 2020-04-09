@@ -1,39 +1,39 @@
+package pokemon;
+
 public class Gourmandise extends Nourriture {
     private int apportLoyaute;
 
-    public Gourmandise(int apport, String nom, String[] compatibilites, int frequence, int apportLoyaute) {
-        super(apport, nom, compatibilites, frequence);
+    public Gourmandise(String nom, int frequence, int apport, String[] compatibilites, int apportLoyaute) {
+        super(nom, frequence, apport, compatibilites);
         this.apportLoyaute = apportLoyaute;
     }
 
     @Override
-    public Gourmandise genererMemeNourriture(boolean generer) {
+    public Item genererMemeItem(boolean generer) {
         if (generer) {
-            return new Gourmandise(this.getApport(), this.getNom(), this.getCompatibilites(), this.getFrequence(), this.apportLoyaute);
+            return new Gourmandise(this.nom, this.frequence, this.apport, this.compatibilites, this.apportLoyaute);
         } else {
             return null;
         }
     }
 
-
     @Override
-    public void estMangee(Pokemon pokemon) {
-        if (null != pokemon) {
-            pokemon.baisserAppetit(this.getApport());
-            if (null != pokemon.getMonJoueur()) {
-                pokemon.monterLoyaute(this.apportLoyaute);
+    public void utiliser(Joueur joueur, int indexPokemon) {
+        if (null != joueur) {
+            if (indexPokemon >= 0 && indexPokemon < joueur.getPokemons().length && joueur.getPokemons()[indexPokemon] != null) {
+                if (this.isCompatible(joueur.getPokemons()[indexPokemon]) && utilisationsRestantes > 0) {
+                    joueur.getPokemons()[indexPokemon].baisserAppetit(this.apport);
+                    if (null != joueur.getPokemons()[indexPokemon].getMonJoueur()) {
+                        joueur.getPokemons()[indexPokemon].monterLoyaute(this.apportLoyaute);
+                    }
+                    this.baisserUtilisationsRestantes(1);
+                }
             }
-
         }
     }
 
-    public int getApportLoyaute() {
-        return this.apportLoyaute;
-    }
-
-
     @Override
     public String toString() {
-        return "Gourmandise : " + this.apportLoyaute + "; " + super.toString();
+        return super.toString() + ", " + apportLoyaute;
     }
 }

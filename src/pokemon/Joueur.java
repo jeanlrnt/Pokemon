@@ -1,31 +1,25 @@
+package pokemon;
+
 public class Joueur {
     private String nom;
     private String prenom;
     private int age;
     private Pokemon[] pokemons = new Pokemon[5];
-    private Nourriture[] provisions = new Nourriture[10];
+    private Nourriture[] provisions;
+    private Item[] sac;
 
     public Joueur(String nom, String prenom, int age, Pokemon[] pokemons) {
         this.nom = nom;
         this.prenom = prenom;
         this.age = age;
-
-        int tailleMinimale = this.pokemons.length;
-        if (pokemons.length < tailleMinimale) {
-            tailleMinimale = pokemons.length;
-        }
-
-        for (int i = 0; i < tailleMinimale; i++) {
-            this.pokemons[i] = pokemons[i];
-        }
-
+        this.pokemons = pokemons;
         this.provisions = new Nourriture[10];
         for (int i = 0; i < pokemons.length; i++) {
             if (null != this.pokemons[i]) {
                 this.pokemons[i].setMonJoueur(this);
             }
-
         }
+        this.sac = new Item[15];
     }
 
     public Joueur(String nom, String prenom, int age) {
@@ -33,7 +27,7 @@ public class Joueur {
     }
 
 
-    private int trouverPokemon(Pokemon pokemon) {
+    public int trouverPokemon(Pokemon pokemon) {
 
         int iterateur = 0;
 
@@ -72,7 +66,7 @@ public class Joueur {
         if (pokemon == null || nourriture == null || this.trouverPokemon(pokemon) == -1 || this.trouverProvision(nourriture) == -1) {
             System.out.println("Parametres non valides.");
         } else {
-            pokemon.manger(nourriture);
+            pokemon.utiliser(nourriture);
             this.provisions[this.trouverProvision(nourriture)] = null;
         }
     }
@@ -85,13 +79,29 @@ public class Joueur {
         }
     }
 
+    public void afficherPokemons() {
+        int iter = 0;
+        for (Pokemon pokemon : pokemons) {
+            if (null != pokemon) {
+                System.out.println("Index " + iter + " : " + pokemon);
+                iter++;
+            }
+        }
+    }
+
     public void caresserPokemon(Pokemon pokemon) {
         if (null != pokemon && this == pokemon.getMonJoueur()) {
             pokemon.monterLoyaute(1);
             if (pokemon.getLoyaute() == 100) {
-                System.out.println("Oui, moi je t'aime aussi !");
+                System.out.println(pokemon.getNom() + " dit : Oui, moi je t'aime aussi !");
             } else {
-                System.out.println("Mmmm, ca sent bien ! Et sous mon oreille gauche ?");
+                System.out.println(pokemon.getNom() + " dit : Mmmm, ca sent bien ! Et sous mon oreille gauche ?");
+            }
+        } else {
+            if (null == pokemon) {
+                System.out.println("Il faut bien specifier un pokemon valide !");
+            } else {
+                System.out.println("Vous ne pouvez pas caresser le pokemon d'un autre joueur !");
             }
         }
     }
@@ -146,12 +156,85 @@ public class Joueur {
         }
     }
 
+    public void donnerItem(int indexPokemon, int indexItem) {
+        if (indexItem >= 0 && indexItem < this.sac.length && indexPokemon >= 0 && indexPokemon < this.pokemons.length) {
+            if (null != this.sac[indexItem] && null != this.pokemons[indexPokemon]) {
+                if (this.sac[indexItem] instanceof Utilisable) {
+                    Utilisable item = (Utilisable) this.sac[indexItem];
+                    item.utiliser(this, indexPokemon);
+                    if (this.sac[indexItem].getUtilisationsRestantes() == 0) {
+                        this.sac[indexItem] = null;
+                    }
+                }
+            }
+        }
+    }
+
+    public void modifierItem(int indexChangeur, int indexAModifier) {
+        if (indexAModifier >= 0 && indexAModifier < this.sac.length && indexChangeur >= 0 && indexChangeur < this.sac.length) {
+            if (null != this.sac[indexAModifier] && null != this.pokemons[indexChangeur]) {
+                if (this.sac[indexChangeur] instanceof ChangerItems && this.sac[indexAModifier] instanceof Modifiable) {
+                    Modifiable itemAModifier = (Modifiable) this.sac[indexAModifier];
+                    ChangerItems itemChangeur = (ChangerItems) this.sac[indexChangeur];
+                    itemChangeur.utiliser(itemAModifier);
+                    if (this.sac[indexChangeur].getUtilisationsRestantes() == 0) {
+                        this.sac[indexChangeur] = null;
+                    }
+                }
+            }
+        }
+    }
+
+    public int trouverItem(Item item) {
+        int iterateur = 0;
+
+        for (Item objet: this.sac) {
+            if (objet == item) {
+                return iterateur;
+            }
+            iterateur++;
+        }
+        return -1;
+    }
+
+    public void ajouterItem(Item item) {
+        int positionLibre = this.trouverItem(null);
+        if (positionLibre != -1) {
+            this.sac[positionLibre] = item;
+            System.out.println(item.getNom() + " a ete ajoute a votre sac");
+        } else {
+            System.out.println("Il n'y a plus de places libre pour " + item.getNom());
+        }
+    }
+
+    public void lacherItem(Item item) {
+        int positionItem = this.trouverItem(item);
+        if (positionItem != -1) {
+            this.sac[positionItem] = null;
+            System.out.println(item.getNom() + " a ete supprime de votre sac");
+        } else {
+            System.out.println("Il n'y a pas de " + item.getNom() + " dans votre sac");
+        }
+    }
+
+    public void afficherSac() {
+        for (Item item: this.sac) {
+            if (item != null) {
+                System.out.println(item);
+            }
+        }
+    }
+
     public String getNom() {
         return this.nom;
     }
 
     public String getPrenom() {
         return this.prenom;
+    }
+
+    public int getAge() {
+        return age;
     }
 
     public Pokemon[] getPokemons() {
@@ -162,8 +245,13 @@ public class Joueur {
         return this.provisions;
     }
 
+    public Item[] getSac() {
+        return sac;
+    }
+
     public String toString() {
         return ("[ Nom : " + this.nom + "; prenom : " + this.prenom + "; age" + this.age + " ]");
     }
 
 }
+

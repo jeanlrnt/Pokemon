@@ -1,50 +1,48 @@
+package pokemon;
+
 import java.util.Random;
 
 public class AttaqueSpeciale extends Attaque {
 
-	public AttaqueSpeciale(String nom, String[] compatibilites, int puissance, int precision, int nombreRepetitions) {
-		super(nom, compatibilites, puissance, precision, nombreRepetitions);
-	}
-
-	
-	@Override
-	public void utiliserAttaque(Pokemon attaquant, Pokemon victime) {
-
-		if (this.repetitionsRestantes > 0 && null != attaquant && null!= victime) {
-			Random random = new Random();
-			int aleatoireAttaquant = random.nextInt(attaquant.getNiveau() + 1);
-			int aleatoireVictime = random.nextInt(victime.getNiveau() + 1);
-			int precision = random.nextInt(101);
-			
-			if (attaquant.getAttaqueSpeciale()+aleatoireAttaquant > victime.getDefenseSpeciale() + aleatoireVictime && precision <= this.getPrecision()) {
-				int dommage = random.nextInt(this.puissance);
-				victime.blessure(dommage);
-				this.baisserNombreRepetitions();
-				System.out.println("Succes. Dommage au pokemon victime : " +dommage + " HP.");
-			}
-			
-		}
+    public AttaqueSpeciale(String nom, String[] compatibilites, int puissance, int precision, int nombreRepetitions) {
+        super(nom, compatibilites, puissance, precision, nombreRepetitions);
+    }
 
 
-	}
+    @Override
+    public void utiliserAttaque(Pokemon attaquant, Pokemon victime) {
+        if (null != attaquant && null != victime) {
+            if (repetitionsRestantes > 0) {
+                Random random = new Random();
+                double aleatoireAttaquant = random.nextInt(attaquant.getNiveau());
+                double aleatoireVictime = random.nextInt(victime.getNiveau());
+                if (attaquant.getAttaqueSpeciale() + aleatoireAttaquant > victime.getDefenseSpeciale() + aleatoireVictime / 2) {
+                    int temp = random.nextInt(this.puissance);
+                    victime.blessure(temp);
+                    System.out.println(attaquant.getNom() + " utilise " + this.nom + " sur " + victime.getNom() + " et lui inflige " + temp + " degats");
+                } else {
+                    System.out.println(attaquant.getNom() + " rate son attaque");
+                }
+                baisserNombreRepetitions();
+            } else {
+                System.out.println("La capacite " + this.nom + " n'a plus de PP, " + attaquant.getNom() + " rate son attaque..");
+            }
+        }
+    }
 
-	@Override
-	public boolean isCompatible(Pokemon pokemon) {
-
-		boolean isCompatible = false;
-		
-		if (null != pokemon) {
-			int i = 0; 
-			
-			while (i < this.compatibilites.length && ! isCompatible) {
-				if (this.compatibilites[i].equals(pokemon.getType())) {
-					isCompatible = true;
-				}
-				i++;
-			}
-		}
-		
-		return isCompatible;
-	}
+    @Override
+    public boolean isCompatible(Pokemon pokemon) {
+        boolean trouve = false;
+        if (null != pokemon) {
+            int i = 0;
+            while (i < this.compatibilites.length && !trouve) {
+                if (this.compatibilites[i].equals(pokemon.getType())) {
+                    trouve = true;
+                }
+                i++;
+            }
+        }
+        return trouve;
+    }
 
 }
