@@ -9,12 +9,12 @@ import pokemon.Attaques.*;
 
 public class ChasseAuxPokemons {
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
 
-        HashMap<String, Integer> mapPokemon = new HashMap<String, Integer>();
+        HashMap<String, Integer> mapPokemon = new HashMap<>();
 
         try {
-            FileReader lecteur = new FileReader("src/tp10/Data/pokedexComplet.txt");
+            FileReader lecteur = new FileReader("src/pokemon/Data/pokedexComplet.txt");
             Scanner s = new Scanner(lecteur);
             while (!s.hasNext("END")) {
                 int numero = s.nextInt();
@@ -28,7 +28,7 @@ public class ChasseAuxPokemons {
             e.printStackTrace();
         }
 
-        HashMap<String, Attaque> mappeAttaques = new HashMap<String, Attaque>();
+        HashMap<String, Attaque> mappeAttaques = new HashMap<>();
         mappeAttaques.put("pistolet_a_eau", new AttaquePistoleEau());
         mappeAttaques.put("bulle", new AttaqueBulle());
         mappeAttaques.put("croquer", new AttaqueCroquer());
@@ -38,10 +38,10 @@ public class ChasseAuxPokemons {
         mappeAttaques.put("tornade_de_feuilles", new AttaqueTornadeFeuilles());
         mappeAttaques.put("coup_de_tete", new AttaqueCoupDeTete());
 
-        ArrayList<Pokemon> pokemonsUtilises = new ArrayList<Pokemon>();
+        ArrayList<Pokemon> pokemonsUtilises = new ArrayList<>();
 
         try {
-            FileReader lecteur = new FileReader("src/tp10/Data/PokemonData.txt");
+            FileReader lecteur = new FileReader("src/pokemon/Data/PokemonData.txt");
             Scanner s = new Scanner(lecteur);
             while (s.hasNextLine()) {
                 String nom = s.next();
@@ -54,9 +54,7 @@ public class ChasseAuxPokemons {
                 int defenseSpe = s.nextInt();
                 Attaque[] attaques = new Attaque[4];
                 for (int i = 0; i < 4; i++) {
-                    if (i < 4) {
-                        attaques[i] = mappeAttaques.get(s.next());
-                    }
+                    attaques[i] = mappeAttaques.get(s.next());
                 }
                 pokemonsUtilises.add(new Pokemon(mapPokemon.get(nom), nom, type, level, diurne, attaque, defense, attaqueSpe, defenseSpe, attaques));
                 s.nextLine();
@@ -66,10 +64,10 @@ public class ChasseAuxPokemons {
             e.printStackTrace();
         }
 
-        ArrayList<Item> itemsUtilises = new ArrayList<Item>();
+        ArrayList<Item> itemsUtilises = new ArrayList<>();
 
         try {
-            FileReader lecteur = new FileReader("src/tp10/Data/ItemData.txt");
+            FileReader lecteur = new FileReader("src/pokemon/Data/ItemData.txt");
             Scanner s = new Scanner(lecteur);
             while (s.hasNextLine()) {
                 String classe = s.next();
@@ -88,7 +86,6 @@ public class ChasseAuxPokemons {
                         frequence = s.nextInt();
                         apport = s.nextInt();
                         compatibilite = new String[18];
-                        i = 0;
                         while (!s.hasNext("END")) {
                             compatibilite[i] = s.next();
                             i++;
@@ -100,12 +97,11 @@ public class ChasseAuxPokemons {
                         frequence = s.nextInt();
                         apport = s.nextInt();
                         compatibilite = new String[18];
-                        i = 0;
                         while (!s.hasNext("END")) {
                             compatibilite[i] = s.next();
                             i++;
                         }
-                        END = s.next();
+                        s.next();
                         apportLoyaute = s.nextInt();
                         itemsUtilises.add(new Gourmandise(nom, frequence, apport, compatibilite, apportLoyaute));
                         break;
@@ -146,7 +142,7 @@ public class ChasseAuxPokemons {
         }
 
         try {
-            moi.getPokedex().charger("src/tp10/Data/pokedexMoi.txt");
+            moi.getPokedex().charger("src/pokemon/Data/pokedexMoi.txt");
         } catch (InputMismatchException e) {
             System.out.println("On ne peut charger le fichier : " + e.getMessage());
             e.printStackTrace();
@@ -158,10 +154,19 @@ public class ChasseAuxPokemons {
         double alea;
         boolean generer;
         int reponseEntiere;
-        ArrayList<Item> nourritureGeneree = new ArrayList<Item>();
+        ArrayList<Item> nourritureGeneree = new ArrayList<>();
         String reponse = "ok";
         while (!reponse.equals("stop")) {
-            System.out.println("1. Afficher les Pokemons \n2. Caresser un pokemon \n3. Regader le sac a Provisions \n4. Nourrir un pokemon\n5. Chasse a la nourriture\n6. main\n7. Fight\n8. Afficher le sac\n Quel est votre choix? ");
+            System.out.println(
+                    "1. Afficher les Pokemons \n" +
+                    "2. Caresser un pokemon \n" +
+                    "3. Regader le sac a Provisions \n" +
+                    "4. Nourrir un pokemon\n" +
+                    "5. Chasse a la nourriture\n" +
+                    "6. main\n" +
+                    "7. Fight\n" +
+                    "8. Afficher le sac\n" +
+                    " Quel est votre choix? ");
             reponse = scanner.next();
             switch (reponse) {
                 case "1":
@@ -224,7 +229,7 @@ public class ChasseAuxPokemons {
                 case "7":
                     int j = 0;
                     int k;
-                    while (!moi.getPokemons()[0].etreEvanoui() || !moi.getPokemons()[1].etreEvanoui()) {
+                    while (moi.getPokemons()[0].etreEnVie() || moi.getPokemons()[1].etreEnVie()) {
                         System.out.println("Tour " + (j + 1) + " : ");
                         System.out.println(moi.getPokemons()[0].getNom() + " : " + moi.getPokemons()[0].getHp() + " hp");
                         System.out.println(moi.getPokemons()[1].getNom() + " : " + moi.getPokemons()[1].getHp() + " hp\n");

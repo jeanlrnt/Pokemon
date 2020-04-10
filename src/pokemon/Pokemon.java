@@ -4,21 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Pokemon {
-    private  int numeroPokedex;
-    private String nom;
-    private String type;
+    private final int numeroPokedex;
+    private final String nom;
+    private final String type;
     private int niveau;
-    private boolean diurne;
+    private final boolean diurne;
     private String nomDonne;
     private Joueur monJoueur;
     private int appetit;
     private int loyaute;
-    private int attaque;
-    private int defense;
-    private int attaqueSpeciale;
-    private int defenseSpeciale;
+    private final int attaque;
+    private final int defense;
+    private final int attaqueSpeciale;
+    private final int defenseSpeciale;
     private int hp;
-    private List<Attaque> attaques = new ArrayList<Attaque>(4);
+    private final List<Attaque> attaques = new ArrayList<>(4);
 
 
     public Pokemon(int numeroPokedex, String nom, String type, int niveau, boolean diurne, String nomDonne, Joueur monJoueur, int attaque,
@@ -34,9 +34,9 @@ public class Pokemon {
         this.defense = defense;
         this.attaqueSpeciale = attaqueSpeciale;
         this.defenseSpeciale = defenseSpeciale;
-        for (int i = 0; i < attaques.length; i++) {
-            if (null != attaques[i]) {
-                this.ajouterAttaque(attaques[i]);
+        for (Attaque value : attaques) {
+            if (null != value) {
+                this.ajouterAttaque(value);
             }
         }
         this.appetit = 50;
@@ -53,8 +53,7 @@ public class Pokemon {
         if (null != item) {
             if (null != this.monJoueur) {
                 if (this.monJoueur.trouverPokemon(this) != -1) {
-                    this.utiliser(item);
-                    System.out.println(this.nom + " utilise " + item);
+                    item.utiliser(this.monJoueur, this.monJoueur.trouverPokemon(this));
                 }
             } else {
                 System.out.println("Le pokemon n'a pas de maitre, il ne peut donc pas recevoir d'objet utilisable..");
@@ -151,7 +150,7 @@ public class Pokemon {
     }
 
     public void rechargerAttaques() {
-        Attaque temp = null;
+        Attaque temp;
         for (int i = 0; i < this.attaques.size(); i++) {
             if (null != this.attaques.get(i)) {
                 temp = this.attaques.get(i);
@@ -168,16 +167,12 @@ public class Pokemon {
         }
     }
 
-    public boolean etreEvanoui() {
-        if (this.hp == 0) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean etreEnVie() {
+        return this.hp != 0;
     }
 
     public void utiliserAttaque(int index, Pokemon victime) {
-        if (!victime.etreEvanoui()) {
+        if (victime.etreEnVie()) {
             if (index < 0 || index >= this.attaques.size() || null == this.attaques.get(index)) {
                 System.out.println("L'attaque n'existe pas vous passez votre tour..");
             } else {
@@ -265,15 +260,15 @@ public class Pokemon {
 
     @Override
     public String toString() {
-        String listeAttaques = "";
+        StringBuilder listeAttaques = new StringBuilder();
         for (Attaque atk: attaques) {
-            if (listeAttaques == "") {
-                listeAttaques += "{" + atk.getNom();
+            if (listeAttaques.toString().equals("")) {
+                listeAttaques.append("{").append(atk.getNom());
             } else {
-                listeAttaques += ", " + atk.getNom();
+                listeAttaques.append(", ").append(atk.getNom());
             }
         }
-        listeAttaques += "}";
+        listeAttaques.append("}");
         return "Pokemon [" + numeroPokedex + " : nom=" + nom + ", type=" + type + ", niveau=" + niveau + ", diurne=" + diurne + ", nomDonne="
                 + nomDonne + ", monJoueur=\"" + monJoueur.getPrenom() + " " + monJoueur.getNom() + "\", appetit=" + appetit
                 + ", loyaute=" + loyaute + ", attaque=" + attaque + ", defense=" + defense + ", attaqueSpeciale="

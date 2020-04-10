@@ -4,7 +4,7 @@ public class Joueur {
     private String nom;
     private String prenom;
     private int age;
-    private Pokemon[] pokemons = new Pokemon[5];
+    private Pokemon[] pokemons;
     private Nourriture[] provisions;
     private Item[] sac;
     private Pokedex pokedex;
@@ -43,7 +43,7 @@ public class Joueur {
         return -1;
     }
 
-    private int trouverProvision(Nourriture nourriture) {
+    int trouverProvision(Nourriture nourriture) {
 
         int iterateur = 0;
 
@@ -70,7 +70,6 @@ public class Joueur {
             System.out.println("Parametres non valides.");
         } else {
             pokemon.utiliser(nourriture);
-            this.provisions[this.trouverProvision(nourriture)] = null;
         }
     }
 

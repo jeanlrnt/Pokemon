@@ -23,10 +23,12 @@ public class Nourriture extends Item implements Utilisable {
     @Override
     public void utiliser(Joueur joueur, int indexPokemon) {
         if (null != joueur) {
-            if (indexPokemon >= 0 && indexPokemon < joueur.getPokemons().length && !joueur.getPokemons()[indexPokemon].equals(null)) {
+            if (indexPokemon >= 0 && indexPokemon < joueur.getPokemons().length && joueur.getPokemons()[indexPokemon] != null) {
                 if (this.isCompatible(joueur.getPokemons()[indexPokemon]) && utilisationsRestantes > 0){
                     joueur.getPokemons()[indexPokemon].baisserAppetit(apport);
                     this.baisserUtilisationsRestantes(1);
+                    System.out.println(joueur.getPokemons()[indexPokemon].getNom() + " utilise " + this);
+                    joueur.getProvisions()[joueur.trouverProvision(this)] = null;
                 }
             }
         }
@@ -60,15 +62,15 @@ public class Nourriture extends Item implements Utilisable {
 
     @Override
     public String toString() {
-        String compatibilite = "{";
+        StringBuilder compatibilite = new StringBuilder("{");
         for (String type: compatibilites) {
-            if (compatibilite == "{" && type != null) {
-                compatibilite += type;
+            if (compatibilite.toString().equals("{") && type != null) {
+                compatibilite.append(type);
             } else if (type != null) {
-                compatibilite += ", " + type;
+                compatibilite.append(", ").append(type);
             }
         }
-        compatibilite += "}";
+        compatibilite.append("}");
         return super.toString() + ", " + apport + ", " + compatibilite;
     }
 }

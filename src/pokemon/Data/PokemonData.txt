@@ -1,3 +1,3 @@
 Piplup EAU 10 true 51 53 61 56 bulle pistolet_a_eau croquer enfer END
-Rolet PLANTE 10 false 55 55 50 55 morsure feinte croquer tornade_de_feuilles END
+Rowlet PLANTE 10 false 55 55 50 55 morsure feinte croquer tornade_de_feuilles END
 Totodile EAU 15 true 65 64 44 48 coup_de_tete pistolet_a_eau morsure END
