@@ -53,8 +53,10 @@ public class ChasseAuxPokemons {
                 int attaqueSpe = s.nextInt();
                 int defenseSpe = s.nextInt();
                 Attaque[] attaques = new Attaque[4];
-                for (int i = 0; i < 4; i++) {
+                int i = 0;
+                while (i < 4 && !s.hasNext("END")) {
                     attaques[i] = mappeAttaques.get(s.next());
+                    i++;
                 }
                 pokemonsUtilises.add(new Pokemon(mapPokemon.get(nom), nom, type, level, diurne, attaque, defense, attaqueSpe, defenseSpe, attaques));
                 s.nextLine();
